@@ -46,7 +46,7 @@ Use your favourite package manager to install this library. Packer example:
 ```lua
 use({
   "arsham/matchmaker.nvim",
-  requires = { "arshlib.nvim", "fzf.vim" },
+  requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
   config = function() require("matchmaker").config({}) end,
 })
 ```
@@ -85,7 +85,7 @@ events is fired. Packer example:
 ```lua
 use({
   "arsham/matchmaker.nvim",
-  requires = { "arshlib.nvim", "fzf.vim" },
+  requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
   config = function() require("matchmaker").config({}) end,
   keys = { "<leader>me", "<leader>ma", "<leader>mp" },
 })
