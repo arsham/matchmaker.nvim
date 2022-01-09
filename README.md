@@ -56,12 +56,12 @@ use({
 By default this pluging adds all necessary mappings. However you can change or
 disable them to your liking.
 
-To disable set them to `false` or `nil` (either would work). For example:
+To disable set them to `false`. For example:
 
 ```lua
 require("matchmaker").config({
   add = false,
-  clear = nil,
+  clear = false,
 })
 ```
 
