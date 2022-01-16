@@ -108,14 +108,16 @@ local function next_group()
   return mappings[last_group]["group"]
 end
 
-local function do_match(name, exact)
+-- selene: allow(global_usage)
+function _G.add_match_partial()
   local term = vim.fn.expand("<cword>")
-  if exact then
-    term = "\\<" .. term .. "\\>"
-  end
   vim.fn.matchadd(next_group(), term)
-  local key = vim.api.nvim_replace_termcodes(name, true, false, true)
-  vim.fn["repeat#set"](key, vim.v.count)
+end --}}}
+
+function _G.add_match_exact()
+  local term = vim.fn.expand("<cword>")
+  term = "\\<" .. term .. "\\>"
+  vim.fn.matchadd(next_group(), term)
 end --}}}
 
 -- stylua: ignore start
@@ -127,6 +129,7 @@ local defaults = {--{{{
   delete  = "<leader>md",
 }
 --}}}
+
 return {
   config = function(opts)
     opts = vim.tbl_extend("force", defaults, opts)
@@ -140,26 +143,21 @@ return {
       delete  = { opts.delete,  strings },
     }) --}}}
 
-    if opts.add then--{{{
-      vim.keymap.set("n", "<Plug>MatchAdd", function()
-        do_match("<Plug>MatchAdd", false)
-      end, { noremap = true, desc = "Add any matches containing a word under the cursor" })
-      vim.keymap.set("n", opts.add, "<Plug>MatchAdd",
-        { noremap = true, desc = "Add any matches containing a word under the cursor" }
-      )
-    end --}}}
+  if opts.add then --{{{
+    local desc = "Add any matches containing a word under the cursor"
+    vim.keymap.set("n", opts.add, function()
+      vim.opt.opfunc = "v:lua.add_match_partial"
+      return "g@<cr>"
+    end, { noremap = true, expr = true, desc = desc })
+  end --}}}
 
-    if opts.exact then--{{{
-      vim.keymap.set("n", "<Plug>MatchExact", function()
-        do_match("<Plug>MatchExact", true)
-      end, {
-        noremap = true,
-        desc = "Add any exact matches containing a word under the cursor",
-      })
-      vim.keymap.set("n", opts.exact, "<Plug>MatchExact",
-        { noremap = true, desc = "Add any exact matches containing a word under the cursor" }
-      )
-    end--}}}
+  if opts.exact then --{{{
+    local desc = "Add any exact matches containing a word under the cursor"
+    vim.keymap.set("n", opts.exact, function()
+      vim.opt.opfunc = "v:lua.add_match_exact"
+      return "g@<cr>"
+    end, { noremap = true, expr = true, desc = desc })
+  end --}}}
 
     if opts.pattern then--{{{
       vim.keymap.set("n", opts.pattern, function()
