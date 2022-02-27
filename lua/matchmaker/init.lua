@@ -120,11 +120,17 @@ function _G.add_match_exact()
   vim.fn.matchadd(next_group(), term)
 end --}}}
 
+function _G.add_match_line()
+  local term = "\\%" .. vim.fn.line(".") .. "l"
+  vim.fn.matchadd(next_group(), term)
+end --}}}
+
 -- stylua: ignore start
 local defaults = {--{{{
   add     = "<leader>ma",
   exact   = "<leader>me",
   pattern = "<leader>mp",
+  line    = "<leader>ml",
   clear   = "<leader>mc",
   delete  = "<leader>md",
 }
@@ -139,6 +145,7 @@ return {
       add     = { opts.add,     strings },
       exact   = { opts.exact,   strings },
       pattern = { opts.pattern, strings },
+      line    = { opts.line,    strings },
       clear   = { opts.clear,   strings },
       delete  = { opts.delete,  strings },
     }) --}}}
@@ -168,6 +175,14 @@ return {
           end,
         })
       end, { noremap = true, desc = "Add any matches containing the input from user" })
+    end--}}}
+
+    if opts.line then--{{{
+      local desc = "Add current line"
+      vim.keymap.set("n", opts.line, function()
+        vim.opt.opfunc = "v:lua.add_match_line"
+        return "g@<cr>"
+      end, { noremap = true, expr = true, desc = desc })
     end--}}}
 
     if opts.clear then--{{{

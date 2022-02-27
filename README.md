@@ -72,6 +72,7 @@ Here is the default settings:
   add     = "<leader>ma",
   exact   = "<leader>me",
   pattern = "<leader>mp",
+  line    = "<leader>ml",
   clear   = "<leader>mc",
   delete  = "<leader>md",
 }
@@ -87,7 +88,7 @@ use({
   "arsham/matchmaker.nvim",
   requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
   config = function() require("matchmaker").config({}) end,
-  keys = { "<leader>me", "<leader>ma", "<leader>mp" },
+  keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
 })
 ```
 
