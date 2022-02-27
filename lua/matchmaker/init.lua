@@ -150,21 +150,21 @@ return {
       delete  = { opts.delete,  strings },
     }) --}}}
 
-  if opts.add then --{{{
-    local desc = "Add any matches containing a word under the cursor"
-    vim.keymap.set("n", opts.add, function()
-      vim.opt.opfunc = "v:lua.add_match_partial"
-      return "g@<cr>"
-    end, { noremap = true, expr = true, desc = desc })
-  end --}}}
+    if opts.add then --{{{
+      local desc = "Add any matches containing a word under the cursor"
+      vim.keymap.set("n", opts.add, function()
+        vim.opt.opfunc = "v:lua.add_match_partial"
+        return "g@<cr>"
+      end, { noremap = true, expr = true, desc = desc })
+    end --}}}
 
-  if opts.exact then --{{{
-    local desc = "Add any exact matches containing a word under the cursor"
-    vim.keymap.set("n", opts.exact, function()
-      vim.opt.opfunc = "v:lua.add_match_exact"
-      return "g@<cr>"
-    end, { noremap = true, expr = true, desc = desc })
-  end --}}}
+    if opts.exact then --{{{
+      local desc = "Add any exact matches containing a word under the cursor"
+      vim.keymap.set("n", opts.exact, function()
+        vim.opt.opfunc = "v:lua.add_match_exact"
+        return "g@<cr>"
+      end, { noremap = true, expr = true, desc = desc })
+    end --}}}
 
     if opts.pattern then--{{{
       vim.keymap.set("n", opts.pattern, function()
