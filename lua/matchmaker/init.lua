@@ -92,29 +92,29 @@ local mappings = _t({ --{{{
 local quick = require("arshlib.quick")
 
 for _, mapping in pairs(mappings) do --{{{
-  quick.highlight(mapping["group"], {
-    guifg = "#232627",
-    guibg = mapping["color"],
-    style = "bold",
+  vim.api.nvim_set_hl(0, mapping["group"], {
+    fg = "#232627",
+    bg = mapping["color"],
+    bold = true,
   })
-end
+end --}}}
 
 local last_group = 0
-local function next_group()
+local function next_group() --{{{
   last_group = last_group + 1
   if last_group > #mappings then
     last_group = 1
   end
   return mappings[last_group]["group"]
-end
+end --}}}
 
 -- selene: allow(global_usage)
-function _G.add_match_partial()
+function _G.add_match_partial() --{{{
   local term = vim.fn.expand("<cword>")
   vim.fn.matchadd(next_group(), term)
 end --}}}
 
-function _G.add_match_exact()
+function _G.add_match_exact() --{{{
   local term = vim.fn.expand("<cword>")
   term = "\\<" .. term .. "\\>"
   vim.fn.matchadd(next_group(), term)
@@ -126,21 +126,20 @@ function _G.add_match_line()
 end --}}}
 
 -- stylua: ignore start
-local defaults = {--{{{
+local defaults = { --{{{
   add     = "<leader>ma",
   exact   = "<leader>me",
   pattern = "<leader>mp",
   line    = "<leader>ml",
   clear   = "<leader>mc",
   delete  = "<leader>md",
-}
---}}}
+} --}}}
 
 return {
   config = function(opts)
     opts = vim.tbl_extend("force", defaults, opts)
     local strings = { "string", "nil", "boolean" }
-    vim.validate({--{{{
+    vim.validate({ --{{{
       opts    = { opts,         "table" },
       add     = { opts.add,     strings },
       exact   = { opts.exact,   strings },
@@ -155,7 +154,7 @@ return {
       vim.keymap.set("n", opts.add, function()
         vim.opt.opfunc = "v:lua.add_match_partial"
         return "g@<cr>"
-      end, { noremap = true, expr = true, desc = desc })
+      end, { expr = true, desc = desc })
     end --}}}
 
     if opts.exact then --{{{
@@ -163,10 +162,10 @@ return {
       vim.keymap.set("n", opts.exact, function()
         vim.opt.opfunc = "v:lua.add_match_exact"
         return "g@<cr>"
-      end, { noremap = true, expr = true, desc = desc })
+      end, { expr = true, desc = desc })
     end --}}}
 
-    if opts.pattern then--{{{
+    if opts.pattern then --{{{
       vim.keymap.set("n", opts.pattern, function()
         require("arshlib.util").user_input({
           prompt = "Pattern: ",
@@ -174,18 +173,18 @@ return {
             vim.fn.matchadd(next_group(), term)
           end,
         })
-      end, { noremap = true, desc = "Add any matches containing the input from user" })
-    end--}}}
+      end, { desc = "Add any matches containing the input from user" })
+    end --}}}
 
-    if opts.line then--{{{
+    if opts.line then --{{{
       local desc = "Add current line"
       vim.keymap.set("n", opts.line, function()
         vim.opt.opfunc = "v:lua.add_match_line"
         return "g@<cr>"
-      end, { noremap = true, expr = true, desc = desc })
-    end--}}}
+      end, { expr = true, desc = desc })
+    end --}}}
 
-    if opts.clear then--{{{
+    if opts.clear then --{{{
       vim.keymap.set("n", opts.clear, function()
         local groups = _t()
         mappings:map(function(v)
@@ -199,10 +198,10 @@ return {
           :map(function(v)
             vim.fn.matchdelete(v.id)
           end)
-      end, { noremap = true, desc = "Clear all matches of the current buffer" })
-    end--}}}
+      end, { desc = "Clear all matches of the current buffer" })
+    end --}}}
 
-    if opts.delete then--{{{
+    if opts.delete then --{{{
       vim.keymap.set("n", opts.delete, function()
         local source = _t()
         local groups = _t()
@@ -246,8 +245,8 @@ return {
           end
         end
         vim.fn["fzf#run"](wrap)
-      end, { noremap = true, desc = "List all matches and remove by user's selection" })
-    end--}}}
+      end, { desc = "List all matches and remove by user's selection" })
+    end --}}}
   end,
 }
 -- stylua: ignore end

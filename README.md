@@ -30,8 +30,7 @@ You can add a pattern with `<leader>mp`:
 
 ## Requirements
 
-At the moment it works on the development release of Neovim, and will be
-officially supporting [Neovim 0.7.0](https://github.com/neovim/neovim/releases/tag/v0.7.0).
+This library supports [Neovim 0.7.0](https://github.com/neovim/neovim/releases/tag/v0.7.0).
 
 This plugin depends are the following libraries. Please make sure to add them
 as dependencies in your package manager:
