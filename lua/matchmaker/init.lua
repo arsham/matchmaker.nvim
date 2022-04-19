@@ -174,12 +174,14 @@ return {
 
     if opts.pattern then --{{{
       vim.keymap.set("n", opts.pattern, function()
-        require("arshlib.util").user_input({
+        vim.ui.input({
           prompt = "Pattern: ",
-          on_submit = function(term)
-            vim.fn.matchadd(next_group(), term)
-          end,
-        })
+        }, function(term)
+            if term then
+              vim.fn.matchadd(next_group(), term)
+            end
+           end
+        )
       end, { desc = "Add any matches containing the input from user" })
     end --}}}
 
