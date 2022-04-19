@@ -120,7 +120,13 @@ function _G.add_match_exact() --{{{
   vim.fn.matchadd(next_group(), term)
 end --}}}
 
-function _G.add_match_line()
+local function add_match_visual() --{{{
+  local term = quick.selection_contents()
+  term = term:gsub("\n", "\\_.")
+  vim.fn.matchadd(next_group(), term)
+end --}}}
+
+function _G.add_match_line() --{{{
   local term = "\\%" .. vim.fn.line(".") .. "l"
   vim.fn.matchadd(next_group(), term)
 end --}}}
@@ -163,6 +169,7 @@ return {
         vim.opt.opfunc = "v:lua.add_match_exact"
         return "g@<cr>"
       end, { expr = true, desc = desc })
+      vim.keymap.set("v", opts.exact, add_match_visual, {  desc = desc })
     end --}}}
 
     if opts.pattern then --{{{
