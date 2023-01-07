@@ -30,7 +30,8 @@ You can add a pattern with `<leader>mp`:
 
 ## Requirements
 
-This library supports [Neovim 0.7.0](https://github.com/neovim/neovim/releases/tag/v0.7.0).
+This library supports [Neovim
+v0.7.0](https://github.com/neovim/neovim/releases/tag/v0.7.0) or newer.
 
 This plugin depends are the following libraries. Please make sure to add them
 as dependencies in your package manager:
@@ -44,9 +45,11 @@ Use your favourite package manager to install this library. Packer example:
 
 ```lua
 use({
-  "arsham/matchmaker.nvim",
-  requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
-  config = function() require("matchmaker").config({}) end,
+	"arsham/matchmaker.nvim",
+	requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+	config = function()
+		require("matchmaker").config({})
+	end,
 })
 ```
 
@@ -59,8 +62,8 @@ To disable set them to `false`. For example:
 
 ```lua
 require("matchmaker").config({
-  add = false,
-  clear = false,
+	add = false,
+	clear = false,
 })
 ```
 
@@ -84,10 +87,12 @@ events is fired. Packer example:
 
 ```lua
 use({
-  "arsham/matchmaker.nvim",
-  requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
-  config = function() require("matchmaker").config({}) end,
-  keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
+	"arsham/matchmaker.nvim",
+	requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+	config = function()
+		require("matchmaker").config({})
+	end,
+	keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
 })
 ```
 

@@ -1,3 +1,20 @@
+---@class HighlightOpt
+---@field style string
+---@field link? string if defined, everything else is ignored
+---@field guifg string
+---@field guibg string
+---@field guisp string
+---@field ctermfg string
+---@field ctermbg string
+
+---@class Quick
+---@field command fun(name: string, command: string|function, opts?: table) Creates a command from provided specifics.
+---@field normal fun(mode: string, motion: string, special: boolean?) Executes a command in normal mode.
+---@field selection_contents fun(): string Returns the contents of the visually selected region.
+---@field buffer_command fun(name: string, command: string|function, opts?: table) Creates a command from provided specifics on current buffer.
+---@field call_and_centre fun(fn: fun()) Pushes the current location to the jumplist and calls the fn callback, then centres the cursor.
+---@field highlight fun(group: string, opt: HighlightOpt) --Create a highlight group.
+
 local mappings = _t({ --{{{
   { group = "MatchingAA", color = "#FF6188" },
   { group = "MatchingAB", color = "#A9DC76" },
@@ -89,6 +106,7 @@ local mappings = _t({ --{{{
   { group = "MatchingDJ", color = "#7FFF00" },
 }):shuffle() --}}}
 
+---@type Quick
 local quick = require("arshlib.quick")
 
 for _, mapping in pairs(mappings) do --{{{
@@ -169,7 +187,7 @@ return {
         vim.opt.opfunc = "v:lua.add_match_exact"
         return "g@<cr>"
       end, { expr = true, desc = desc })
-      vim.keymap.set("v", opts.exact, add_match_visual, {  desc = desc })
+      vim.keymap.set("x", opts.exact, add_match_visual, {  desc = desc })
     end --}}}
 
     if opts.pattern then --{{{
