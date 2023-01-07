@@ -1,3 +1,5 @@
+---@diagnostic disable: undefined-global
+
 ---@class HighlightOpt
 ---@field style string
 ---@field link? string if defined, everything else is ignored
@@ -132,6 +134,7 @@ function _G.add_match_partial() --{{{
   vim.fn.matchadd(next_group(), term)
 end --}}}
 
+-- selene: allow(global_usage)
 function _G.add_match_exact() --{{{
   local term = vim.fn.expand("<cword>")
   term = "\\<" .. term .. "\\>"
@@ -144,6 +147,7 @@ local function add_match_visual() --{{{
   vim.fn.matchadd(next_group(), term)
 end --}}}
 
+-- selene: allow(global_usage)
 function _G.add_match_line() --{{{
   local term = "\\%" .. vim.fn.line(".") .. "l"
   vim.fn.matchadd(next_group(), term)
@@ -159,122 +163,125 @@ local defaults = { --{{{
   delete  = "<leader>md",
 } --}}}
 
-return {
-  config = function(opts)
-    opts = vim.tbl_extend("force", defaults, opts)
-    local strings = { "string", "nil", "boolean" }
-    vim.validate({ --{{{
-      opts    = { opts,         "table" },
-      add     = { opts.add,     strings },
-      exact   = { opts.exact,   strings },
-      pattern = { opts.pattern, strings },
-      line    = { opts.line,    strings },
-      clear   = { opts.clear,   strings },
-      delete  = { opts.delete,  strings },
-    }) --}}}
+local function setup(opts)
+  opts = vim.tbl_extend("force", defaults, opts or {})
+  local strings = { "string", "nil", "boolean" }
+  vim.validate({ --{{{
+    opts    = { opts,         "table" },
+    add     = { opts.add,     strings },
+    exact   = { opts.exact,   strings },
+    pattern = { opts.pattern, strings },
+    line    = { opts.line,    strings },
+    clear   = { opts.clear,   strings },
+    delete  = { opts.delete,  strings },
+  }) --}}}
 
-    if opts.add then --{{{
-      local desc = "Add any matches containing a word under the cursor"
-      vim.keymap.set("n", opts.add, function()
-        vim.opt.opfunc = "v:lua.add_match_partial"
-        return "g@<cr>"
-      end, { expr = true, desc = desc })
-    end --}}}
+  if opts.add then --{{{
+    local desc = "Add any matches containing a word under the cursor"
+    vim.keymap.set("n", opts.add, function()
+      vim.opt.opfunc = "v:lua.add_match_partial"
+      return "g@<cr>"
+    end, { expr = true, desc = desc })
+  end --}}}
 
-    if opts.exact then --{{{
-      local desc = "Add any exact matches containing a word under the cursor"
-      vim.keymap.set("n", opts.exact, function()
-        vim.opt.opfunc = "v:lua.add_match_exact"
-        return "g@<cr>"
-      end, { expr = true, desc = desc })
-      vim.keymap.set("x", opts.exact, add_match_visual, {  desc = desc })
-    end --}}}
+  if opts.exact then --{{{
+    local desc = "Add any exact matches containing a word under the cursor"
+    vim.keymap.set("n", opts.exact, function()
+      vim.opt.opfunc = "v:lua.add_match_exact"
+      return "g@<cr>"
+    end, { expr = true, desc = desc })
+    vim.keymap.set("x", opts.exact, add_match_visual, {  desc = desc })
+  end --}}}
 
-    if opts.pattern then --{{{
-      vim.keymap.set("n", opts.pattern, function()
-        vim.ui.input({
-          prompt = "Pattern: ",
-        }, function(term)
-            if term then
-              vim.fn.matchadd(next_group(), term)
-            end
-           end
-        )
-      end, { desc = "Add any matches containing the input from user" })
-    end --}}}
+  if opts.pattern then --{{{
+    vim.keymap.set("n", opts.pattern, function()
+      vim.ui.input({
+        prompt = "Pattern: ",
+      }, function(term)
+          if term then
+            vim.fn.matchadd(next_group(), term)
+          end
+         end
+      )
+    end, { desc = "Add any matches containing the input from user" })
+  end --}}}
 
-    if opts.line then --{{{
-      local desc = "Add current line"
-      vim.keymap.set("n", opts.line, function()
-        vim.opt.opfunc = "v:lua.add_match_line"
-        return "g@<cr>"
-      end, { expr = true, desc = desc })
-    end --}}}
+  if opts.line then --{{{
+    local desc = "Add current line"
+    vim.keymap.set("n", opts.line, function()
+      vim.opt.opfunc = "v:lua.add_match_line"
+      return "g@<cr>"
+    end, { expr = true, desc = desc })
+  end --}}}
 
-    if opts.clear then --{{{
-      vim.keymap.set("n", opts.clear, function()
-        local groups = _t()
-        mappings:map(function(v)
-          groups[v.group] = true
+  if opts.clear then --{{{
+    vim.keymap.set("n", opts.clear, function()
+      local groups = _t()
+      mappings:map(function(v)
+        groups[v.group] = true
+      end)
+
+      _t(vim.fn.getmatches())
+        :filter(function(v)
+          return v and groups[v.group]
+        end)
+        :map(function(v)
+          vim.fn.matchdelete(v.id)
+        end)
+    end, { desc = "Clear all matches of the current buffer" })
+  end --}}}
+
+  if opts.delete then --{{{
+    vim.keymap.set("n", opts.delete, function()
+      local source = _t()
+      local groups = _t()
+      mappings:map(function(v)
+        groups[v.group] = v.color
+      end)
+
+      _t(vim.fn.getmatches())
+        :filter(function(v)
+          return v and groups[v.group]
+        end)
+        :sort(function(a, b)
+          return a.id > b.id
+        end)
+        :map(function(v)
+          local str = string.format("%2d\t%50s\t%20s", v.id, v.pattern, groups[v.group])
+          table.insert(source, str)
         end)
 
-        _t(vim.fn.getmatches())
-          :filter(function(v)
-            return v and groups[v.group]
-          end)
-          :map(function(v)
-            vim.fn.matchdelete(v.id)
-          end)
-      end, { desc = "Clear all matches of the current buffer" })
-    end --}}}
+      if #source == 0 then
+        return
+      end
 
-    if opts.delete then --{{{
-      vim.keymap.set("n", opts.delete, function()
-        local source = _t()
-        local groups = _t()
-        mappings:map(function(v)
-          groups[v.group] = v.color
-        end)
-
-        _t(vim.fn.getmatches())
-          :filter(function(v)
-            return v and groups[v.group]
-          end)
-          :sort(function(a, b)
-            return a.id > b.id
-          end)
-          :map(function(v)
-            local str = string.format("%2d\t%50s\t%20s", v.id, v.pattern, groups[v.group])
-            table.insert(source, str)
-          end)
-
-        if #source == 0 then
-          return
-        end
-
-        local wrap = vim.fn["fzf#wrap"]({
-          source = source,
-          options = table.concat({
-            "--multi",
-            "--bind",
-            "ctrl-a:select-all+accept ",
-            "--layout reverse-list",
-            '--delimiter="\t"',
-            "--with-nth=2..",
-          }, " "),
-        })
-        wrap["sink*"] = function(list)
-          for _, name in pairs(list) do
-            local id = string.match(name, "^%s*(%d+)")
-            if id ~= nil then
-              vim.fn.matchdelete(id)
-            end
+      local wrap = vim.fn["fzf#wrap"]({
+        source = source,
+        options = table.concat({
+          "--multi",
+          "--bind",
+          "ctrl-a:select-all+accept ",
+          "--layout reverse-list",
+          '--delimiter="\t"',
+          "--with-nth=2..",
+        }, " "),
+      })
+      wrap["sink*"] = function(list)
+        for _, name in pairs(list) do
+          local id = string.match(name, "^%s*(%d+)")
+          if id ~= nil then
+            vim.fn.matchdelete(id)
           end
         end
-        vim.fn["fzf#run"](wrap)
-      end, { desc = "List all matches and remove by user's selection" })
-    end --}}}
-  end,
+      end
+      vim.fn["fzf#run"](wrap)
+    end, { desc = "List all matches and remove by user's selection" })
+  end --}}}
+end
+
+return {
+  setup = setup,
+  config = setup,
 }
 -- stylua: ignore end
 

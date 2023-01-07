@@ -8,6 +8,8 @@ Neovim plugin for quickly create random highlights for matches.
 1. [Demo](#demo)
 2. [Requirements](#requirements)
 3. [Installation](#installation)
+   - [Lazy](#lazy)
+   - [Packer](#packer)
    - [Config](#config)
    - [Lazy Loading](#lazy-loading)
 4. [License](#license)
@@ -41,7 +43,21 @@ as dependencies in your package manager:
 
 ## Installation
 
-Use your favourite package manager to install this library. Packer example:
+Use your favourite package manager to install this library.
+
+### Lazy
+
+```lua
+{
+	"arsham/matchmaker.nvim",
+	dependencies = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+  config = true,
+  -- or to provide configuration
+  -- config = { add = "<leader>ma", .. }
+}
+```
+
+### Packer
 
 ```lua
 use({
