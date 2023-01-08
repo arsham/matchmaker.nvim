@@ -61,11 +61,11 @@ Use your favourite package manager to install this library.
 
 ```lua
 use({
-	"arsham/matchmaker.nvim",
-	requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
-	config = function()
-		require("matchmaker").config({})
-	end,
+  "arsham/matchmaker.nvim",
+  requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+  config = function()
+    require("matchmaker").config({})
+  end,
 })
 ```
 
@@ -78,8 +78,8 @@ To disable set them to `false`. For example:
 
 ```lua
 require("matchmaker").config({
-	add = false,
-	clear = false,
+  add = false,
+  clear = false,
 })
 ```
 
@@ -103,12 +103,12 @@ events is fired. Packer example:
 
 ```lua
 use({
-	"arsham/matchmaker.nvim",
-	requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
-	config = function()
-		require("matchmaker").config({})
-	end,
-	keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
+  "arsham/matchmaker.nvim",
+  requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+  config = function()
+    require("matchmaker").config({})
+  end,
+  keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
 })
 ```
 
