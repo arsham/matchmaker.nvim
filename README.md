@@ -49,8 +49,8 @@ Use your favourite package manager to install this library.
 
 ```lua
 {
-	"arsham/matchmaker.nvim",
-	dependencies = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+  "arsham/matchmaker.nvim",
+  dependencies = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
   config = true,
   -- or to provide configuration
   -- config = { add = "<leader>ma", .. }
@@ -99,7 +99,9 @@ Here is the default settings:
 ### Lazy Loading
 
 You can let your package manager to load this plugin when a key-mapping
-events is fired. Packer example:
+events is fired.
+
+#### Packer example
 
 ```lua
 use({
@@ -110,6 +112,17 @@ use({
   end,
   keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
 })
+```
+
+#### Lazy example
+
+```lua
+{
+  "arsham/matchmaker.nvim",
+  dependencies = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+  config = true,
+  keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
+}
 ```
 
 ## License

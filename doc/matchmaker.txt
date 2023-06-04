@@ -1,0 +1,171 @@
+*matchmaker.txt*                                                   Match Maker
+
+      Neovim plugin for quickly create random highlights for matches.
+
+                        __      __              __                      ~
+            __ _  ___ _/ /_____/ /  __ _  ___ _/ /_____ ____            ~
+           /  ' \/ _ `/ __/ __/ _ \/  ' \/ _ `/  '_/ -_) __/            ~
+          /_/_/_/\_,_/\__/\__/_//_/_/_/_/\_,_/_/\_\\__/_/               ~
+
+
+Author:   Arsham Shirvani <arsham@duck.com>
+Homepage: <https://github.com/arsham/matchmaker.nvim>
+License:  MIT license
+
+==============================================================================
+CONTENTS                                               *matchmaker-contents*
+
+1. Introduction .................................... |matchmaker-introduction|
+2. Requirements .................................... |matchmaker-requirements|
+3. Installation .................................... |matchmaker-installation|
+   - Lazy ..................................... |matchmaker-installation-lazy|
+   - Packer ................................. |matchmaker-installation-packer|
+   - Lazy Loading ..................... |matchmaker-installation-lazy-loading|
+   - Configuration ................................ |matchmaker-configuration|
+4. Mappings ............................................ |matchmaker-mappings|
+5. License .............................................. |matchmaker-license|
+
+==============================================================================
+INTRODUCTION                                         *matchmaker-introduction*
+
+Neovim plugin for quickly create random highlights for matches.
+
+==============================================================================
+REQUIREMENTS                                         *matchmaker-requirements*
+
+This library supports Neovim v0.7.0 or newer.
+
+This library depends are the following libraries. Please make sure to add them
+as dependencies in your package manager:
+
+ Project         Link                                      Reason for using
+------------------------------------------------------------------------------
+ arshlib.nvim  <https://github.com/arsham/arshlib.nvim>   common library
+ fzf.vim       <https://github.com/junegunn/fzf.vim>      selector library
+
+==============================================================================
+INSTALLATION                                         *matchmaker-installation*
+
+Use your favourite package manager to install this library.
+
+LAZY                                            *matchmaker-installation-lazy*
+------------------------------------------------------------------------------
+
+>lua
+  {
+    "arsham/matchmaker.nvim",
+    dependencies = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+    config = true,
+    -- or to provide configuration
+    -- config = { add = "<leader>ma", .. }
+  }
+<
+
+PACKER                                        *matchmaker-installation-packer*
+------------------------------------------------------------------------------
+
+>lua
+  use({
+    "arsham/matchmaker.nvim",
+    requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+    config = function()
+      require("matchmaker").config({})
+    end,
+  })
+<
+
+LAZY LOADING                            *matchmaker-installation-lazy-loading*
+------------------------------------------------------------------------------
+
+You can let your package manager to load this plugin when a key-mapping
+event is fired.
+
+For Packer:
+
+>lua
+  use({
+    "arsham/matchmaker.nvim",
+    requires = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+    config = function()
+      require("matchmaker").config({})
+    end,
+    keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
+  })
+<
+
+For Lazy:
+
+>lua
+  {
+    "arsham/matchmaker.nvim",
+    dependencies = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
+    config = true,
+    keys = { "<leader>me", "<leader>ma", "<leader>mp", "<leader>ml" },
+  }
+<
+
+
+CONFIGURATION                                       *matchmaker-configuration*
+------------------------------------------------------------------------------
+
+By default this pluging adds all necessary mappings. However you can change or
+disable them to your liking.
+
+To disable set them to `false`. For example:
+
+>lua
+  require("matchmaker").config({
+    add = false,
+    clear = false,
+  })
+<
+
+Here is the default settings:
+
+>lua
+  {
+    add     = "<leader>ma",
+    exact   = "<leader>me",
+    pattern = "<leader>mp",
+    line    = "<leader>ml",
+    clear   = "<leader>mc",
+    delete  = "<leader>md",
+  }
+<
+
+==============================================================================
+MAPPINGS                                                 *matchmaker-mappings*
+
+*LEADER-ma*  Add the current word as a new match        *matchmaker_LEADER-ma*
+*LEADER-me*  Add the current word as an exaxt match     *matchmaker_LEADER-me*
+*LEADER-mp*  Add a user defined pattern                 *matchmaker_LEADER-mp*
+*LEADER-ml*  Add the current line                       *matchmaker_LEADER-ml*
+*LEADER-mc*  Clear all matches for current buffer       *matchmaker_LEADER-mc*
+*LEADER-md*  Delete a match on current buffer           *matchmaker_LEADER-md*
+
+==============================================================================
+LICENSE                                                   *matchmaker-license*
+
+MIT License
+
+Copyright (c) 2023 Arsham Shirvani
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+vim:tw=78:ts=8:ft=help:norl:
