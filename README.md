@@ -53,7 +53,7 @@ Use your favourite package manager to install this library.
   dependencies = { "arsham/arshlib.nvim", "junegunn/fzf.vim" },
   config = true,
   -- or to provide configuration
-  -- config = { add = "<leader>ma", .. }
+  -- opts = { add = "<leader>ma", ... }
 }
 ```
 
